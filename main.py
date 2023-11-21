@@ -2,21 +2,26 @@ import tkinter as tk
 import math
 
 homePageButtonColor = 'blue'
+totalPointsSelected = 0
+x1, y1, x2, y2 = 0, 0, 0, 0
+
 
 class Point:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+points = []
+
 def draw_point(event):
     global points
     global selectedValue
     x = event.x
     y = event.y
-    print(selectedValue)
-    if(selectedValue == 1):
+    if selectedValue == 1:
         points.append(Point(x, y))
         canvas.create_oval(x-4, y-4, x+4, y+4, fill="red")
+
 
 def on_radio_select():
     global selectedValue
@@ -64,11 +69,38 @@ def simpleGraph():
     label1.grid(row=0, column=0, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
     radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
-    canvas.bind("<Button-1>", draw_point)
+    canvas.bind("<Button-1>", simpleGraphCanvasClicked)
     canvas.grid(row=3, column=0, padx=10, pady=10)
     app.columnconfigure(0, weight=1)
     app.rowconfigure(2, weight=1)
 
+def drawEdge(event):
+    global points
+    global selectedValue
+    global totalPointsSelected
+    global x1
+    global y1
+    global x2
+    global y2
+
+    x = event.x
+    y = event.y
+    for point in points:
+        if(abs(point.x - x) <= 5 and abs(point.y - y) <= 5):
+            if totalPointsSelected == 0:
+                x1, y1 = point.x, point.y
+                totalPointsSelected += 1
+            elif totalPointsSelected == 1:
+                x2, y2 = point.x, point.y
+                totalPointsSelected = 0
+                canvas.create_line(x1, y1, x2, y2, fill="blue")
+
+def simpleGraphCanvasClicked(event):
+    global selectedValue
+    if selectedValue == 1:
+        draw_point(event)
+    elif selectedValue == 2:
+        drawEdge(event)
 
 def completeGraph():
     label.destroy()
@@ -87,7 +119,7 @@ def completeGraph():
 
     
 
-points = []
+
 app = tk.Tk()
 app.geometry("800x600")
 
