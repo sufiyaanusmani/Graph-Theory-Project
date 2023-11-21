@@ -1,6 +1,8 @@
 import tkinter as tk
 import math
 
+homePageButtonColor = 'blue'
+
 class Point:
     def __init__(self, x, y):
         self.x = x
@@ -25,8 +27,8 @@ def update_label(value):
     canvas.delete("all")
     sliderValue = int(sliderValue) - 1
 
-    radius = 100
-    center_x, center_y = 200, 150
+    radius = 200
+    center_x, center_y = 225, 225
     angle_increment = 360 / sliderValue
 
     vertices = []
@@ -94,13 +96,13 @@ app.title("Graph Theory Project")
 label = tk.Label(app, text="Main Page")
 selectedValue = -1
 radio_var = tk.IntVar()
-btn1 = tk.Button(app, text="Draw Simple Graph", command=simpleGraph)
-btn2 = tk.Button(app, text="Generate Complete Graph", command=completeGraph)
-btn3 = tk.Button(app, text="Bipartite and Tripartite Graph", command=clear_content)
-btn4 = tk.Button(app, text="Havel Hakimi", command=clear_content)
+btn1 = tk.Button(app, text="Draw Simple Graph", command=simpleGraph, bg=homePageButtonColor)
+btn2 = tk.Button(app, text="Generate Complete Graph", command=completeGraph, bg=homePageButtonColor)
+btn3 = tk.Button(app, text="Bipartite and Tripartite Graph", command=clear_content, bg=homePageButtonColor)
+btn4 = tk.Button(app, text="Havel Hakimi", command=clear_content, bg=homePageButtonColor)
 radio_button1 = tk.Radiobutton(app, text="Add Vertices", variable=radio_var, value=1, command=on_radio_select)
 radio_button2 = tk.Radiobutton(app, text="Add Edges", variable=radio_var, value=2, command=on_radio_select)
-canvas = tk.Canvas(app, width=500, height=500, bg="lightgray")
+canvas = tk.Canvas(app, width=450, height=450, bg="lightgray")
 slider = tk.Scale(
     app,
     from_=10,
