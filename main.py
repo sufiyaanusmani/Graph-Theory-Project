@@ -6,6 +6,7 @@ totalPointsSelected = 0
 x1, y1, x2, y2 = 0, 0, 0, 0
 canvasDimension = 450
 colorTemp = "white"
+vertexRadius = 6
 
 
 class Point:
@@ -19,11 +20,12 @@ points = []
 def draw_point(event):
     global points
     global selectedValue
+    global vertexRadius
     x = event.x
     y = event.y
     if selectedValue == 1:
         points.append(Point(x, y))
-        canvas.create_oval(x-4, y-4, x+4, y+4, fill="red")
+        canvas.create_oval(x-vertexRadius, y-vertexRadius, x+vertexRadius, y+vertexRadius, fill="red")
 
 
 def on_radio_select():
@@ -32,6 +34,7 @@ def on_radio_select():
 
 def completeGraphSlider(value):
     global sliderValue
+    global vertexRadius
     canvas.delete("all")
     sliderValue = int(sliderValue) - 1
 
@@ -45,7 +48,7 @@ def completeGraphSlider(value):
         x = center_x + radius * math.cos(math.radians(angle_rad))
         y = center_y + radius * math.sin(math.radians(angle_rad))
         vertices.append((x, y))
-        canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill="red")
+        canvas.create_oval(x - vertexRadius, y - vertexRadius, x + vertexRadius, y + vertexRadius, fill="red")
 
     for i in range(sliderValue):
         for j in range(i + 1, sliderValue):
@@ -117,6 +120,7 @@ def completeGraph():
 def drawBipartitePoint(event):
     global points
     global selectedValue
+    global vertexRadius
     x = event.x
     y = event.y
     mid = canvasDimension // 2
@@ -126,7 +130,7 @@ def drawBipartitePoint(event):
         else:
             color = "green"
         points.append(Point(x, y, color))
-        canvas.create_oval(x-4, y-4, x+4, y+4, fill=color)
+        canvas.create_oval(x-vertexRadius, y-vertexRadius, x+vertexRadius, y+vertexRadius, fill=color)
 
 def drawBipartiteEdge(event):
     global points
@@ -165,12 +169,78 @@ def bipartiteGraphButtonClicked():
     selectedValue = -1
     clear_content()
 
-    label1 = tk.Label(app, text="Simple Graph")
+    label1 = tk.Label(app, text="Bipartite Graph")
     label1.grid(row=0, column=0, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
     radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
     canvas.create_line(canvasDimension // 2, 0,  canvasDimension // 2, canvasDimension, width=1, fill="grey")
     canvas.bind("<Button-1>", bipartiteGraphCanvasClicked)
+    canvas.grid(row=3, column=0, padx=10, pady=10)
+    app.columnconfigure(0, weight=1)
+    app.rowconfigure(2, weight=1)
+
+def drawTripartitePoint(event):
+    global points
+    global selectedValue
+    global vertexRadius
+    x = event.x
+    y = event.y
+    mid1 = canvasDimension // 3
+    mid2 = 2 * mid1
+    if selectedValue == 1:
+        if x < mid1:
+            color = "red"
+        elif x > mid1 and x < mid2:
+            color = "green"
+        else:
+            color = "yellow"
+        points.append(Point(x, y, color))
+        canvas.create_oval(x-vertexRadius, y-vertexRadius, x+vertexRadius, y+vertexRadius, fill=color)
+
+def drawTripartiteEdge(event):
+    global points
+    global selectedValue
+    global totalPointsSelected
+    global x1
+    global y1
+    global x2
+    global y2
+    global colorTemp
+
+    x = event.x
+    y = event.y
+    for point in points:
+        if(abs(point.x - x) <= 5 and abs(point.y - y) <= 5):
+            if totalPointsSelected == 0:
+                x1, y1 = point.x, point.y
+                totalPointsSelected += 1
+                colorTemp = point.color
+            elif totalPointsSelected == 1:
+                x2, y2 = point.x, point.y
+                totalPointsSelected = 0
+                if point.color != colorTemp:
+                    canvas.create_line(x1, y1, x2, y2, fill="blue", width=2)
+
+def tripartiteGraphCanvasClicked(event):
+    global selectedValue
+    if selectedValue == 1:
+        drawTripartitePoint(event)
+    elif selectedValue == 2:
+        drawTripartiteEdge(event)
+
+def tripartiteGraphButtonClicked():
+    global selectedValue
+    global canvasDimension
+    selectedValue = -1
+    clear_content()
+
+    label1 = tk.Label(app, text="Tripartite Graph")
+    label1.grid(row=0, column=0, padx=10, pady=10)
+    radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+    radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+    canvas.create_line(canvasDimension // 3, 0,  canvasDimension // 3, canvasDimension, width=1, fill="grey")
+    canvas.create_line((canvasDimension // 3) * 2, 0,  (canvasDimension // 3) * 2, canvasDimension, width=1, fill="grey")
+    canvas.bind("<Button-1>", tripartiteGraphCanvasClicked)
     canvas.grid(row=3, column=0, padx=10, pady=10)
     app.columnconfigure(0, weight=1)
     app.rowconfigure(2, weight=1)
@@ -187,7 +257,7 @@ radio_var = tk.IntVar()
 btn1 = tk.Button(app, text="Draw Simple Graph", command=simpleGraph, bg=homePageButtonColor)
 btn2 = tk.Button(app, text="Generate Complete Graph", command=completeGraph, bg=homePageButtonColor)
 btn3 = tk.Button(app, text="Bipartite Graph", command=bipartiteGraphButtonClicked, bg=homePageButtonColor)
-btn4 = tk.Button(app, text="Tripartite Graph", command=bipartiteGraphButtonClicked, bg=homePageButtonColor)
+btn4 = tk.Button(app, text="Tripartite Graph", command=tripartiteGraphButtonClicked, bg=homePageButtonColor)
 btn5 = tk.Button(app, text="Havel Hakimi", command=clear_content, bg=homePageButtonColor)
 radio_button1 = tk.Radiobutton(app, text="Add Vertices", variable=radio_var, value=1, command=on_radio_select)
 radio_button2 = tk.Radiobutton(app, text="Add Edges", variable=radio_var, value=2, command=on_radio_select)
