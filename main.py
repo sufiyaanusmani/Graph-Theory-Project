@@ -7,6 +7,9 @@ x1, y1, x2, y2 = 0, 0, 0, 0
 canvasDimension = 450
 colorTemp = "white"
 vertexRadius = 6
+degreeSequence = []
+graphExists = False
+userInput = ""
 
 
 class Point:
@@ -245,6 +248,73 @@ def tripartiteGraphButtonClicked():
     app.columnconfigure(0, weight=1)
     app.rowconfigure(2, weight=1)
 
+def havelHakimiSteps(a, steps):
+    for ch in a:
+        steps += f'{ch},'
+    steps = steps[:-1]
+    steps += '\n'
+    return steps
+
+def havelHakimi():
+    global degreeSequence
+    global graphExists
+    global userInput
+    userInput = str(text.get())
+    userInput = userInput.split(',')
+    degreeSequence = [int(x) for x in userInput]
+    graphExists = False
+    steps = ""
+    a = degreeSequence
+    l = []
+    havelHakimiStepsLabel = tk.Label(app, height=10, text="")
+    havelHakimiStepsLabel.grid(row=5, column=0, padx=10, pady=10)
+    havelHakimiStepsLabel.config(text=steps)
+    while True: 
+        steps = havelHakimiSteps(a, steps)
+        havelHakimiStepsLabel.config(text=steps)
+        a = sorted(a, reverse = True)
+        steps = havelHakimiSteps(a, steps)
+        havelHakimiStepsLabel.config(text=steps)
+        l.append(a)
+        if a[0]== 0 and a[len(a)-1]== 0:
+            graphExists = True
+            steps += 'Graph Exists'
+            havelHakimiStepsLabel.config(text=steps)
+            return
+
+        v = a[0]
+        a = a[1:]
+ 
+        if v>len(a): 
+            graphExists = False
+            steps = havelHakimiSteps(a, steps)
+            steps += 'Graph Does Not Exists'
+            havelHakimiStepsLabel.config(text=steps)
+            return
+ 
+        for i in range(v):
+            a[i]-= 1
+            if a[i]<0:
+                graphExists = False
+                steps = havelHakimiSteps(a, steps)
+                steps += 'Graph Does Not Exists'
+                havelHakimiStepsLabel.config(text=steps)
+                return
+            
+
+
+def havelHakimiWindow():
+    global userInput
+    clear_content()
+    label1 = tk.Label(app, text="Havel Hakimi")
+    label1.grid(row=0, column=0, padx=10, pady=10)
+    label2 = tk.Label(app, text="Enter degree sequence")
+    label2.grid(row=1, column=0, padx=10, pady=10)
+    
+    text.grid(row=2, column=0, padx=10, pady=10)
+    btn6 = tk.Button(app, text="Run", command=havelHakimi)
+    btn6.grid(row=3, column=0, padx=10, pady=10)
+
 
 app = tk.Tk()
 app.geometry("800x600")
@@ -258,10 +328,11 @@ btn1 = tk.Button(app, text="Draw Simple Graph", command=simpleGraph, bg=homePage
 btn2 = tk.Button(app, text="Generate Complete Graph", command=completeGraph, bg=homePageButtonColor)
 btn3 = tk.Button(app, text="Bipartite Graph", command=bipartiteGraphButtonClicked, bg=homePageButtonColor)
 btn4 = tk.Button(app, text="Tripartite Graph", command=tripartiteGraphButtonClicked, bg=homePageButtonColor)
-btn5 = tk.Button(app, text="Havel Hakimi", command=clear_content, bg=homePageButtonColor)
+btn5 = tk.Button(app, text="Havel Hakimi", command=havelHakimiWindow, bg=homePageButtonColor)
 radio_button1 = tk.Radiobutton(app, text="Add Vertices", variable=radio_var, value=1, command=on_radio_select)
 radio_button2 = tk.Radiobutton(app, text="Add Edges", variable=radio_var, value=2, command=on_radio_select)
 canvas = tk.Canvas(app, width=canvasDimension, height=canvasDimension, bg="lightgray")
+text = tk.Entry(app, textvariable=userInput)
 slider = tk.Scale(
     app,
     from_=10,
