@@ -1,4 +1,5 @@
 import tkinter as tk
+import customtkinter
 import math
 
 homePageButtonColor = 'blue'
@@ -71,7 +72,7 @@ def clear_content():
 def simpleGraph():
     clear_content()
 
-    label1 = tk.Label(app, text="Simple Graph")
+    label1 = customtkinter.CTkLabel(app, text="Simple Graph")
     label1.grid(row=0, column=0, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
     radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
@@ -112,7 +113,7 @@ def simpleGraphCanvasClicked(event):
 def completeGraph():
     clear_content()
 
-    label1 = tk.Label(app, text="Complete Graph")
+    label1 = customtkinter.CTkLabel(app, text="Complete Graph")
     label1.grid(row=0, column=0, padx=10, pady=10)
     slider.grid(row=1, column=0, padx=10, pady=10)
     canvas.bind("<Button-1>", draw_point)
@@ -172,7 +173,7 @@ def bipartiteGraphButtonClicked():
     selectedValue = -1
     clear_content()
 
-    label1 = tk.Label(app, text="Bipartite Graph")
+    label1 = customtkinter.CTkLabel(app, text="Bipartite Graph")
     label1.grid(row=0, column=0, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
     radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
@@ -237,7 +238,7 @@ def tripartiteGraphButtonClicked():
     selectedValue = -1
     clear_content()
 
-    label1 = tk.Label(app, text="Tripartite Graph")
+    label1 = customtkinter.CTkLabel(app, text="Tripartite Graph")
     label1.grid(row=0, column=0, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
     radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
@@ -306,44 +307,51 @@ def havelHakimi():
 def havelHakimiWindow():
     global userInput
     clear_content()
-    label1 = tk.Label(app, text="Havel Hakimi")
+    label1 = customtkinter.CTkLabel(app, text="Havel Hakimi")
     label1.grid(row=0, column=0, padx=10, pady=10)
-    label2 = tk.Label(app, text="Enter degree sequence")
+    label2 = customtkinter.CTkLabel(app, text="Enter degree sequence")
     label2.grid(row=1, column=0, padx=10, pady=10)
     
     text.grid(row=2, column=0, padx=10, pady=10)
-    btn6 = tk.Button(app, text="Run", command=havelHakimi)
+    btn6 = customtkinter.CTkButton(app, text="Run", command=havelHakimi)
     btn6.grid(row=3, column=0, padx=10, pady=10)
 
+customtkinter.set_appearance_mode('dark')
+customtkinter.set_default_color_theme('green')
+app = customtkinter.CTk()
+windowWidth = 800
+windowHeight = 600
+screen_width = app.winfo_screenwidth()
+screen_height = app.winfo_screenheight()
+x_position = (screen_width - windowWidth) // 2
+y_position = (screen_height - windowHeight) // 2
 
-app = tk.Tk()
-app.geometry("800x600")
-
+app.geometry(f"{windowWidth}x{windowHeight}+{x_position}+{y_position}")
 app.title("Graph Theory Project")
 
-label = tk.Label(app, text="Main Page")
+label = customtkinter.CTkLabel(app, text="Main Page", font=("Helvetica", 20))
 selectedValue = -1
 radio_var = tk.IntVar()
-btn1 = tk.Button(app, text="Draw Simple Graph", command=simpleGraph, bg=homePageButtonColor)
-btn2 = tk.Button(app, text="Generate Complete Graph", command=completeGraph, bg=homePageButtonColor)
-btn3 = tk.Button(app, text="Bipartite Graph", command=bipartiteGraphButtonClicked, bg=homePageButtonColor)
-btn4 = tk.Button(app, text="Tripartite Graph", command=tripartiteGraphButtonClicked, bg=homePageButtonColor)
-btn5 = tk.Button(app, text="Havel Hakimi", command=havelHakimiWindow, bg=homePageButtonColor)
-radio_button1 = tk.Radiobutton(app, text="Add Vertices", variable=radio_var, value=1, command=on_radio_select)
-radio_button2 = tk.Radiobutton(app, text="Add Edges", variable=radio_var, value=2, command=on_radio_select)
-canvas = tk.Canvas(app, width=canvasDimension, height=canvasDimension, bg="lightgray")
-text = tk.Entry(app, textvariable=userInput)
-slider = tk.Scale(
+btn1 = customtkinter.CTkButton(app, text="Draw Simple Graph", command=simpleGraph)
+btn2 = customtkinter.CTkButton(app, text="Generate Complete Graph", command=completeGraph)
+btn3 = customtkinter.CTkButton(app, text="Bipartite Graph", command=bipartiteGraphButtonClicked)
+btn4 = customtkinter.CTkButton(app, text="Tripartite Graph", command=tripartiteGraphButtonClicked)
+btn5 = customtkinter.CTkButton(app, text="Havel Hakimi", command=havelHakimiWindow)
+radio_button1 = customtkinter.CTkRadioButton(app, text="Add Vertices", variable=radio_var, value=1, command=on_radio_select)
+radio_button2 = customtkinter.CTkRadioButton(app, text="Add Edges", variable=radio_var, value=2, command=on_radio_select)
+canvas = customtkinter.CTkCanvas(app, width=canvasDimension, height=canvasDimension, bg="grey")
+text = customtkinter.CTkEntry(app, textvariable=userInput)
+slider = customtkinter.CTkSlider(
     app,
     from_=10,
     to=100,
-    orient=tk.HORIZONTAL,
-    length=200,
+    orientation=tk.HORIZONTAL,
+    width=200,
     command=completeGraphSlider
 )
 sliderValue = 10
 
-
+app.columnconfigure(0, weight=1) 
 label.grid(row=0, column=0, padx=10, pady=10)
 btn1.grid(row=1, column=0, padx=10, pady=10, columnspan=2)
 btn2.grid(row=2, column=0, padx=10, pady=10, columnspan=2)
