@@ -5,12 +5,13 @@ import math
 homePageButtonColor = 'blue'
 totalPointsSelected = 0
 x1, y1, x2, y2 = 0, 0, 0, 0
-canvasDimension = 450
+canvasDimension = 480
 colorTemp = "white"
 vertexRadius = 6
 degreeSequence = []
 graphExists = False
 userInput = ""
+sliderValue = 10
 
 
 class Point:
@@ -40,7 +41,8 @@ def completeGraphSlider(value):
     global sliderValue
     global vertexRadius
     canvas.delete("all")
-    sliderValue = int(sliderValue) - 1
+    sliderValue = int(sliderValue) 
+    completeGraphLabel.configure(text=f"Complete Graph (Vertices: {sliderValue})")
 
     radius = 200
     center_x, center_y = 225, 225
@@ -58,7 +60,7 @@ def completeGraphSlider(value):
         for j in range(i + 1, sliderValue):
             x1, y1 = vertices[i]
             x2, y2 = vertices[j]
-            canvas.create_line(x1, y1, x2, y2, fill="blue")
+            canvas.create_line(x1, y1, x2, y2, fill="cyan")
     sliderValue = value
 
 def clear_content():
@@ -72,12 +74,12 @@ def clear_content():
 def simpleGraph():
     clear_content()
 
-    label1 = customtkinter.CTkLabel(app, text="Simple Graph")
-    label1.grid(row=0, column=0, padx=10, pady=10)
+    label1 = customtkinter.CTkLabel(app, text="Simple Graph", font=("Helvetica", 20))
+    label1.grid(row=0, column=1, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-    radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+    radio_button2.grid(row=2, column=2, padx=10, pady=10, sticky="w")
     canvas.bind("<Button-1>", simpleGraphCanvasClicked)
-    canvas.grid(row=3, column=0, padx=10, pady=10)
+    canvas.grid(row=3, column=1, padx=10, pady=10)
     app.columnconfigure(0, weight=1)
     app.rowconfigure(2, weight=1)
 
@@ -93,15 +95,16 @@ def drawEdge(event):
 
     x = event.x
     y = event.y
-    for point in points:
-        if(abs(point.x - x) <= 5 and abs(point.y - y) <= 5):
-            if totalPointsSelected == 0:
-                x1, y1 = point.x, point.y
-                totalPointsSelected += 1
-            elif totalPointsSelected == 1:
-                x2, y2 = point.x, point.y
-                totalPointsSelected = 0
-                canvas.create_line(x1, y1, x2, y2, fill="blue", width=2)
+    if len(points) >= 10:
+        for point in points:
+            if(abs(point.x - x) <= 8 and abs(point.y - y) <= 8):
+                if totalPointsSelected == 0:
+                    x1, y1 = point.x, point.y
+                    totalPointsSelected += 1
+                elif totalPointsSelected == 1:
+                    x2, y2 = point.x, point.y
+                    totalPointsSelected = 0
+                    canvas.create_line(x1, y1, x2, y2, fill="cyan", width=2)
 
 def simpleGraphCanvasClicked(event):
     global selectedValue
@@ -111,11 +114,15 @@ def simpleGraphCanvasClicked(event):
         drawEdge(event)
 
 def completeGraph():
+    global sliderValue
     clear_content()
 
-    label1 = customtkinter.CTkLabel(app, text="Complete Graph")
-    label1.grid(row=0, column=0, padx=10, pady=10)
+    
+    completeGraphLabel.grid(row=0, column=0, padx=10, pady=10)
     slider.grid(row=1, column=0, padx=10, pady=10)
+    slider.set(sliderValue)
+    label2 = customtkinter.CTkLabel(app, text=f"Vertices: {sliderValue}", font=("Helvetica", 20))
+    label2.grid(row=2, column=1, padx=10, pady=10)
     canvas.bind("<Button-1>", draw_point)
     canvas.grid(row=3, column=0, padx=10, pady=10)
     app.columnconfigure(0, weight=1)
@@ -173,7 +180,7 @@ def bipartiteGraphButtonClicked():
     selectedValue = -1
     clear_content()
 
-    label1 = customtkinter.CTkLabel(app, text="Bipartite Graph")
+    label1 = customtkinter.CTkLabel(app, text="Bipartite Graph", font=("Helvetica", 20))
     label1.grid(row=0, column=0, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
     radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
@@ -238,7 +245,7 @@ def tripartiteGraphButtonClicked():
     selectedValue = -1
     clear_content()
 
-    label1 = customtkinter.CTkLabel(app, text="Tripartite Graph")
+    label1 = customtkinter.CTkLabel(app, text="Tripartite Graph", font=("Helvetica", 20))
     label1.grid(row=0, column=0, padx=10, pady=10)
     radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
     radio_button2.grid(row=2, column=1, padx=10, pady=10, sticky="w")
@@ -267,20 +274,20 @@ def havelHakimi():
     steps = ""
     a = degreeSequence
     l = []
-    havelHakimiStepsLabel = tk.Label(app, height=10, text="")
+    havelHakimiStepsLabel = customtkinter.CTkLabel(app, height=10, text="", font=("Helvetica", 20))
     havelHakimiStepsLabel.grid(row=5, column=0, padx=10, pady=10)
-    havelHakimiStepsLabel.config(text=steps)
+    havelHakimiStepsLabel.configure(text=steps)
     while True: 
         steps = havelHakimiSteps(a, steps)
-        havelHakimiStepsLabel.config(text=steps)
+        havelHakimiStepsLabel.configure(text=steps)
         a = sorted(a, reverse = True)
         steps = havelHakimiSteps(a, steps)
-        havelHakimiStepsLabel.config(text=steps)
+        havelHakimiStepsLabel.configure(text=steps)
         l.append(a)
         if a[0]== 0 and a[len(a)-1]== 0:
             graphExists = True
             steps += 'Graph Exists'
-            havelHakimiStepsLabel.config(text=steps)
+            havelHakimiStepsLabel.configure(text=steps)
             return
 
         v = a[0]
@@ -290,7 +297,7 @@ def havelHakimi():
             graphExists = False
             steps = havelHakimiSteps(a, steps)
             steps += 'Graph Does Not Exists'
-            havelHakimiStepsLabel.config(text=steps)
+            havelHakimiStepsLabel.configure(text=steps)
             return
  
         for i in range(v):
@@ -299,7 +306,7 @@ def havelHakimi():
                 graphExists = False
                 steps = havelHakimiSteps(a, steps)
                 steps += 'Graph Does Not Exists'
-                havelHakimiStepsLabel.config(text=steps)
+                havelHakimiStepsLabel.configure(text=steps)
                 return
             
 
@@ -316,6 +323,7 @@ def havelHakimiWindow():
     btn6 = customtkinter.CTkButton(app, text="Run", command=havelHakimi)
     btn6.grid(row=3, column=0, padx=10, pady=10)
 
+
 customtkinter.set_appearance_mode('dark')
 customtkinter.set_default_color_theme('green')
 app = customtkinter.CTk()
@@ -329,27 +337,29 @@ y_position = (screen_height - windowHeight) // 2
 app.geometry(f"{windowWidth}x{windowHeight}+{x_position}+{y_position}")
 app.title("Graph Theory Project")
 
-label = customtkinter.CTkLabel(app, text="Main Page", font=("Helvetica", 20))
-selectedValue = -1
-radio_var = tk.IntVar()
+
+label = customtkinter.CTkLabel(app, text="Graph Theory Project (Problem 1)", font=("Helvetica", 20))
+infoLabel = customtkinter.CTkLabel(app, text="Group Members\nSufiyaan Usmani (21K-3195)\nYousuf Ahmed (21K-4594)\nShahmir Raza (21K-3158)", font=("Helvetica", 15), text_color="yellow")
 btn1 = customtkinter.CTkButton(app, text="Draw Simple Graph", command=simpleGraph)
 btn2 = customtkinter.CTkButton(app, text="Generate Complete Graph", command=completeGraph)
 btn3 = customtkinter.CTkButton(app, text="Bipartite Graph", command=bipartiteGraphButtonClicked)
 btn4 = customtkinter.CTkButton(app, text="Tripartite Graph", command=tripartiteGraphButtonClicked)
+selectedValue = -1
+radio_var = tk.IntVar()
 btn5 = customtkinter.CTkButton(app, text="Havel Hakimi", command=havelHakimiWindow)
 radio_button1 = customtkinter.CTkRadioButton(app, text="Add Vertices", variable=radio_var, value=1, command=on_radio_select)
 radio_button2 = customtkinter.CTkRadioButton(app, text="Add Edges", variable=radio_var, value=2, command=on_radio_select)
-canvas = customtkinter.CTkCanvas(app, width=canvasDimension, height=canvasDimension, bg="grey")
+canvas = customtkinter.CTkCanvas(app, width=canvasDimension, height=canvasDimension, bg="#363636")
 text = customtkinter.CTkEntry(app, textvariable=userInput)
 slider = customtkinter.CTkSlider(
     app,
     from_=10,
     to=100,
     orientation=tk.HORIZONTAL,
-    width=200,
+    width=300,
     command=completeGraphSlider
 )
-sliderValue = 10
+completeGraphLabel = customtkinter.CTkLabel(app, text=f"Complete Graph (Vertices: {sliderValue})", font=("Helvetica", 20))
 
 app.columnconfigure(0, weight=1) 
 label.grid(row=0, column=0, padx=10, pady=10)
@@ -358,10 +368,5 @@ btn2.grid(row=2, column=0, padx=10, pady=10, columnspan=2)
 btn3.grid(row=3, column=0, padx=10, pady=10, columnspan=2)
 btn4.grid(row=4, column=0, padx=10, pady=10, columnspan=2)
 btn5.grid(row=5, column=0, padx=10, pady=10, columnspan=2)
-# canvas.grid(row=2, column=0, padx=10, pady=10)
-
-# app.columnconfigure(0, weight=1)
-
-# app.rowconfigure(2, weight=1)
-
+infoLabel.grid(row=7, column=0, padx=10, pady=100, columnspan=2)
 app.mainloop()
