@@ -70,6 +70,7 @@ def clear_content():
     btn3.destroy()
     btn4.destroy()
     btn5.destroy()
+    infoLabel.destroy()
 
 def simpleGraph():
     clear_content()
