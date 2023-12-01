@@ -72,17 +72,6 @@ def clear_content():
     btn5.destroy()
     infoLabel.destroy()
 
-def simpleGraph():
-    clear_content()
-
-    label1 = customtkinter.CTkLabel(app, text="Simple Graph", font=("Helvetica", 20))
-    label1.grid(row=0, column=1, padx=10, pady=10)
-    radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-    radio_button2.grid(row=2, column=2, padx=10, pady=10, sticky="w")
-    canvas.bind("<Button-1>", simpleGraphCanvasClicked)
-    canvas.grid(row=3, column=1, padx=10, pady=10)
-    app.columnconfigure(0, weight=1)
-    app.rowconfigure(2, weight=1)
 
 def drawEdge(event):
     global points
@@ -98,7 +87,7 @@ def drawEdge(event):
     y = event.y
     if len(points) >= 10:
         for point in points:
-            if(abs(point.x - x) <= 8 and abs(point.y - y) <= 8):
+            if(abs(point.x - x) <= 10 and abs(point.y - y) <= 10):
                 if totalPointsSelected == 0:
                     x1, y1 = point.x, point.y
                     totalPointsSelected += 1
@@ -113,6 +102,18 @@ def simpleGraphCanvasClicked(event):
         draw_point(event)
     elif selectedValue == 2:
         drawEdge(event)
+
+def simpleGraph():
+    clear_content()
+
+    label1 = customtkinter.CTkLabel(app, text="Simple Graph", font=("Helvetica", 20))
+    label1.grid(row=0, column=1, padx=10, pady=10)
+    radio_button1.grid(row=2, column=0, padx=10, pady=10, sticky="w")
+    radio_button2.grid(row=2, column=2, padx=10, pady=10, sticky="w")
+    canvas.bind("<Button-1>", simpleGraphCanvasClicked)
+    canvas.grid(row=3, column=1, padx=10, pady=10)
+    app.columnconfigure(0, weight=1)
+    app.rowconfigure(2, weight=1)
 
 def completeGraph():
     global sliderValue
@@ -156,17 +157,18 @@ def drawBipartiteEdge(event):
 
     x = event.x
     y = event.y
-    for point in points:
-        if(abs(point.x - x) <= 5 and abs(point.y - y) <= 5):
-            if totalPointsSelected == 0:
-                x1, y1 = point.x, point.y
-                totalPointsSelected += 1
-                colorTemp = point.color
-            elif totalPointsSelected == 1:
-                x2, y2 = point.x, point.y
-                totalPointsSelected = 0
-                if point.color != colorTemp:
-                    canvas.create_line(x1, y1, x2, y2, fill="blue", width=2)
+    if len(points) >= 10:
+        for point in points:
+            if(abs(point.x - x) <= 10 and abs(point.y - y) <= 10):
+                if totalPointsSelected == 0:
+                    x1, y1 = point.x, point.y
+                    totalPointsSelected += 1
+                    colorTemp = point.color
+                elif totalPointsSelected == 1:
+                    x2, y2 = point.x, point.y
+                    totalPointsSelected = 0
+                    if point.color != colorTemp:
+                        canvas.create_line(x1, y1, x2, y2, fill="blue", width=2)
 
 def bipartiteGraphCanvasClicked(event):
     global selectedValue
@@ -221,17 +223,18 @@ def drawTripartiteEdge(event):
 
     x = event.x
     y = event.y
-    for point in points:
-        if(abs(point.x - x) <= 5 and abs(point.y - y) <= 5):
-            if totalPointsSelected == 0:
-                x1, y1 = point.x, point.y
-                totalPointsSelected += 1
-                colorTemp = point.color
-            elif totalPointsSelected == 1:
-                x2, y2 = point.x, point.y
-                totalPointsSelected = 0
-                if point.color != colorTemp:
-                    canvas.create_line(x1, y1, x2, y2, fill="blue", width=2)
+    if len(points) >= 10:
+        for point in points:
+            if(abs(point.x - x) <= 10 and abs(point.y - y) <= 10):
+                if totalPointsSelected == 0:
+                    x1, y1 = point.x, point.y
+                    totalPointsSelected += 1
+                    colorTemp = point.color
+                elif totalPointsSelected == 1:
+                    x2, y2 = point.x, point.y
+                    totalPointsSelected = 0
+                    if point.color != colorTemp:
+                        canvas.create_line(x1, y1, x2, y2, fill="blue", width=2)
 
 def tripartiteGraphCanvasClicked(event):
     global selectedValue
@@ -351,7 +354,7 @@ btn5 = customtkinter.CTkButton(app, text="Havel Hakimi", command=havelHakimiWind
 radio_button1 = customtkinter.CTkRadioButton(app, text="Add Vertices", variable=radio_var, value=1, command=on_radio_select)
 radio_button2 = customtkinter.CTkRadioButton(app, text="Add Edges", variable=radio_var, value=2, command=on_radio_select)
 canvas = customtkinter.CTkCanvas(app, width=canvasDimension, height=canvasDimension, bg="#363636")
-text = customtkinter.CTkEntry(app, textvariable=userInput)
+text = customtkinter.CTkEntry(app, textvariable=userInput, width=200)
 slider = customtkinter.CTkSlider(
     app,
     from_=10,
